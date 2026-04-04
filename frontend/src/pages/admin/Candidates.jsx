@@ -1,19 +1,24 @@
 import { useState, useEffect } from 'react';
-import { getElections, getCandidatesByElection, createCandidate, deleteCandidate } from '../../services/api';
+import { getElections, getCandidatesByElection, createCandidate, updateCandidate, deleteCandidate } from '../../services/api';
 import Navbar from '../../components/layout/Navbar';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/Dialog';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Upload, Edit } from 'lucide-react';
 
 export default function Candidates() {
   const [elections, setElections] = useState([]);
   const [selectedElection, setSelectedElection] = useState('');
   const [candidates, setCandidates] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
-  const [formData, setFormData] = useState({ name: '', position: '', photo: '' });
+  const [editMode, setEditMode] = useState(false);
+  const [currentCandidate, setCurrentCandidate] = useState(null);
+  const [formData, setFormData] = useState({ name: '', position: '' });
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchElections();
@@ -46,15 +51,78 @@ export default function Candidates() {
     }
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPhotoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleCreate = async (e) => {
     e.preventDefault();
+    setUploading(true);
+
     try {
-      await createCandidate({ ...formData, election_id: selectedElection });
-      setShowDialog(false);
-      setFormData({ name: '', position: '', photo: '' });
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('position', formData.position);
+      formDataToSend.append('election_id', selectedElection);
+      
+      if (photoFile) {
+        formDataToSend.append('photo', photoFile);
+      }
+
+      await createCandidate(formDataToSend);
+      
+      handleCloseDialog();
       fetchCandidates();
     } catch (error) {
-      alert('Failed to create candidate');
+      alert('Failed to create candidate: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleEdit = (candidate) => {
+    setEditMode(true);
+    setCurrentCandidate(candidate);
+    setFormData({
+      name: candidate.name,
+      position: candidate.position
+    });
+    // Set existing photo as preview
+    if (candidate.photo) {
+      setPhotoPreview(`http://localhost:5000${candidate.photo}`);
+    }
+    setShowDialog(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('position', formData.position);
+      
+      if (photoFile) {
+        formDataToSend.append('photo', photoFile);
+      }
+
+      await updateCandidate(currentCandidate.id, formDataToSend);
+      
+      handleCloseDialog();
+      fetchCandidates();
+    } catch (error) {
+      alert('Failed to update candidate: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -67,6 +135,15 @@ export default function Candidates() {
         alert('Failed to delete candidate');
       }
     }
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+    setEditMode(false);
+    setCurrentCandidate(null);
+    setFormData({ name: '', position: '' });
+    setPhotoFile(null);
+    setPhotoPreview(null);
   };
 
   return (
@@ -105,21 +182,38 @@ export default function Candidates() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Photo</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Position</TableHead>
-                  <TableHead>Photo URL</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {candidates.map((candidate) => (
                   <TableRow key={candidate.id}>
+                    <TableCell>
+                      {candidate.photo ? (
+                        <img 
+                          src={`http://localhost:5000${candidate.photo}`} 
+                          alt={candidate.name}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">No photo</span>
+                        </div>
+                      )}
+                    </TableCell>
                     <TableCell className="font-medium">{candidate.name}</TableCell>
                     <TableCell>{candidate.position}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {candidate.photo || 'No photo'}
-                    </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(candidate)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
                       <Button
                         size="sm"
                         variant="destructive"
@@ -135,12 +229,12 @@ export default function Candidates() {
           </CardContent>
         </Card>
 
-        <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogContent onClose={() => setShowDialog(false)}>
+        <Dialog open={showDialog} onOpenChange={handleCloseDialog}>
+          <DialogContent onClose={handleCloseDialog}>
             <DialogHeader>
-              <DialogTitle>Add New Candidate</DialogTitle>
+              <DialogTitle>{editMode ? 'Edit Candidate' : 'Add New Candidate'}</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-4 mt-4">
+            <form onSubmit={editMode ? handleUpdate : handleCreate} className="space-y-4 mt-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Name</label>
                 <Input
@@ -149,6 +243,7 @@ export default function Candidates() {
                   required
                 />
               </div>
+              
               <div className="space-y-2">
                 <label className="text-sm font-medium">Position</label>
                 <Input
@@ -157,14 +252,37 @@ export default function Candidates() {
                   required
                 />
               </div>
+              
               <div className="space-y-2">
-                <label className="text-sm font-medium">Photo URL (optional)</label>
-                <Input
-                  value={formData.photo}
-                  onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
-                />
+                <label className="text-sm font-medium">Photo</label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex items-center justify-center px-4 py-2 border border-input rounded-md cursor-pointer hover:bg-accent">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Choose Photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoChange}
+                      className="hidden"
+                    />
+                  </label>
+                  {photoPreview && (
+                    <img 
+                      src={photoPreview} 
+                      alt="Preview" 
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Max size: 5MB. Formats: JPG, PNG, GIF, WebP
+                  {editMode && !photoFile && ' (Leave empty to keep current photo)'}
+                </p>
               </div>
-              <Button type="submit" className="w-full">Add Candidate</Button>
+              
+              <Button type="submit" className="w-full" disabled={uploading}>
+                {uploading ? 'Uploading...' : (editMode ? 'Update Candidate' : 'Add Candidate')}
+              </Button>
             </form>
           </DialogContent>
         </Dialog>

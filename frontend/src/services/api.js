@@ -23,13 +23,22 @@ export const login = (data) => api.post('/auth/login', data);
 export const getElections = () => api.get('/elections');
 export const getElectionById = (id) => api.get(`/elections/${id}`);
 export const createElection = (data) => api.post('/elections', data);
+export const updateElection = (id, data) => api.put(`/elections/${id}`, data);
 export const updateElectionStatus = (id, status) => api.patch(`/elections/${id}/status`, { status });
 export const deleteElection = (id) => api.delete(`/elections/${id}`);
 
 // Candidates
 export const getCandidatesByElection = (electionId) => api.get(`/candidates/election/${electionId}`);
-export const createCandidate = (data) => api.post('/candidates', data);
-export const updateCandidate = (id, data) => api.put(`/candidates/${id}`, data);
+export const createCandidate = (formData) => api.post('/candidates', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
+export const updateCandidate = (id, formData) => api.put(`/candidates/${id}`, formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
 export const deleteCandidate = (id) => api.delete(`/candidates/${id}`);
 
 // Votes
@@ -39,6 +48,7 @@ export const getResults = (electionId) => api.get(`/votes/results/${electionId}`
 
 // Users
 export const getUsers = () => api.get('/users');
+export const toggleUserStatus = (id, status) => api.patch(`/users/${id}/status`, { status });
 export const deleteUser = (id) => api.delete(`/users/${id}`);
 
 export default api;

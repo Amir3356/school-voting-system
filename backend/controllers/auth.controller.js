@@ -50,6 +50,12 @@ export const login = async (req, res) => {
     }
 
     const user = users[0];
+
+    // Check if user is inactive (if status column exists)
+    if (user.status && user.status === 'inactive') {
+      return res.status(403).json({ message: 'Your account has been deactivated. Please contact administrator.' });
+    }
+
     const isValidPassword = await comparePassword(password, user.password);
 
     if (!isValidPassword) {

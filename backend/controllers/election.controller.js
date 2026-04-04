@@ -2,11 +2,11 @@ import pool from '../config/db.js';
 
 export const createElection = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, start_time, end_time } = req.body;
 
     const [result] = await pool.query(
-      'INSERT INTO elections (title, description, status) VALUES (?, ?, ?)',
-      [title, description, 'closed']
+      'INSERT INTO elections (title, description, status, start_time, end_time) VALUES (?, ?, ?, ?, ?)',
+      [title, description, 'closed', start_time || null, end_time || null]
     );
 
     res.status(201).json({ message: 'Election created', electionId: result.insertId });
@@ -33,6 +33,22 @@ export const getElectionById = async (req, res) => {
     }
 
     res.json(elections[0]);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const updateElection = async (req, res) => {
+  try {
+    const { title, description, status, start_time, end_time } = req.body;
+    const { id } = req.params;
+
+    await pool.query(
+      'UPDATE elections SET title = ?, description = ?, status = ?, start_time = ?, end_time = ? WHERE id = ?',
+      [title, description, status, start_time || null, end_time || null, id]
+    );
+
+    res.json({ message: 'Election updated successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

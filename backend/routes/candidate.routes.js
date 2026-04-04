@@ -7,12 +7,13 @@ import {
 } from '../controllers/candidate.controller.js';
 import { authenticate } from '../middleware/auth.middleware.js';
 import { isAdmin } from '../middleware/role.middleware.js';
+import upload from '../config/multer.js';
 
 const router = express.Router();
 
 router.get('/election/:electionId', authenticate, getCandidatesByElection);
-router.post('/', authenticate, isAdmin, createCandidate);
-router.put('/:id', authenticate, isAdmin, updateCandidate);
+router.post('/', authenticate, isAdmin, upload.single('photo'), createCandidate);
+router.put('/:id', authenticate, isAdmin, upload.single('photo'), updateCandidate);
 router.delete('/:id', authenticate, isAdmin, deleteCandidate);
 
 export default router;

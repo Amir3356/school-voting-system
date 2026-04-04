@@ -8,6 +8,8 @@ import Results from '../pages/student/Results';
 import AdminDashboard from '../pages/admin/Dashboard';
 import Elections from '../pages/admin/Elections';
 import Candidates from '../pages/admin/Candidates';
+import Users from '../pages/admin/Users';
+import Analytics from '../pages/admin/Analytics';
 
 function ProtectedRoute({ children, allowedRole }) {
   const { user, loading } = useAuth();
@@ -63,6 +65,16 @@ export default function AppRoutes() {
         <Route path="/admin/candidates" element={
           <ProtectedRoute allowedRole="admin">
             <Candidates />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/users" element={
+          <ProtectedRoute allowedRole="admin">
+            <Users />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/analytics" element={
+          <ProtectedRoute allowedRole="admin">
+            <Analytics />
           </ProtectedRoute>
         } />
         
