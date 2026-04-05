@@ -66,35 +66,37 @@ export default function AdminDashboard() {
       <Navbar />
       
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
+        <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-muted-foreground">Manage school elections and users</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Elections</p>
-                  <p className="text-3xl font-bold">{stats.elections}</p>
+        <div className="flex justify-center items-center mb-8">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 max-w-2xl">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Elections</p>
+                    <p className="text-3xl font-bold">{stats.elections}</p>
+                  </div>
+                  <Vote className="w-8 h-8 text-blue-500" />
                 </div>
-                <Vote className="w-8 h-8 text-blue-500" />
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Users</p>
-                  <p className="text-3xl font-bold">{stats.users}</p>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Users</p>
+                    <p className="text-3xl font-bold">{stats.users}</p>
+                  </div>
+                  <Users className="w-8 h-8 text-green-500" />
                 </div>
-                <Users className="w-8 h-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">

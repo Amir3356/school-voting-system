@@ -48,6 +48,7 @@ export const getResults = (electionId) => api.get(`/votes/results/${electionId}`
 
 // Users
 export const getUsers = () => api.get('/users');
+export const getStudentStats = () => api.get('/users/stats');
 export const toggleUserStatus = (id, status) => api.patch(`/users/${id}/status`, { status });
 export const deleteUser = (id) => api.delete(`/users/${id}`);
 

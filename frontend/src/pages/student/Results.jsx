@@ -4,7 +4,7 @@ import { getResults, getElectionById } from '../../services/api';
 import Navbar from '../../components/layout/Navbar';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Trophy } from 'lucide-react';
+import { Trophy, Calendar, Clock } from 'lucide-react';
 
 export default function Results() {
   const { electionId } = useParams();
@@ -49,9 +49,44 @@ export default function Results() {
       <Navbar />
       
       <div className="max-w-6xl mx-auto p-6">
-        <div className="mb-8">
+        <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-2">{election?.title} - Results</h1>
-          <p className="text-muted-foreground">Total Votes: {totalVotes}</p>
+          <p className="text-muted-foreground mb-4">Total Votes: {totalVotes}</p>
+          
+          {/* Election Time Information */}
+          <div className="flex flex-wrap gap-4">
+            {election?.start_time && (
+              <div className="flex items-center gap-2 text-sm bg-blue-50 px-4 py-2 rounded-lg">
+                <Calendar className="w-4 h-4 text-blue-600" />
+                <span className="font-medium text-blue-900">Started:</span>
+                <span className="text-blue-700">
+                  {new Date(election.start_time).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+            )}
+            
+            {election?.end_time && (
+              <div className="flex items-center gap-2 text-sm bg-red-50 px-4 py-2 rounded-lg">
+                <Clock className="w-4 h-4 text-red-600" />
+                <span className="font-medium text-red-900">Ended:</span>
+                <span className="text-red-700">
+                  {new Date(election.end_time).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {winner && (
