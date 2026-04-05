@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from './config/db.js';
+import scheduleElectionStatusUpdates from './utils/electionScheduler.js';
 import authRoutes from './routes/auth.routes.js';
 import electionRoutes from './routes/election.routes.js';
 import candidateRoutes from './routes/candidate.routes.js';
@@ -62,4 +63,9 @@ app.listen(PORT, async () => {
   
   // Test database connection
   await testDatabaseConnection();
+  
+  // Start election scheduler
+  scheduleElectionStatusUpdates();
+  
+  console.log('');
 });

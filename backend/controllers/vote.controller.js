@@ -1,17 +1,32 @@
 import pool from '../config/db.js';
+import { checkElectionStatus } from '../utils/electionScheduler.js';
 
 export const castVote = async (req, res) => {
   try {
     const { candidate_id, election_id } = req.body;
     const user_id = req.user.id;
 
-    // Check if election is open
-    const [elections] = await pool.query(
-      'SELECT status FROM elections WHERE id = ?',
-      [election_id]
-    );
+    // Check and update election status based on time
+    const election = await checkElectionStatus(election_id);
 
-    if (elections.length === 0 || elections[0].status !== 'open') {
+    if (!election) {
+      return res.status(404).json({ message: 'Election not found' });
+    }
+
+    // Check if election is open
+    if (election.status !== 'open') {
+      // Check if it's because of time
+      const now = new Date();
+      if (election.start_time && new Date(election.start_time) > now) {
+        return res.status(400).json({ 
+          message: `Election has not started yet. It will open on ${new Date(election.start_time).toLocaleString()}` 
+        });
+      }
+      if (election.end_time && new Date(election.end_time) <= now) {
+        return res.status(400).json({ 
+          message: 'Election has ended. Voting is no longer allowed.' 
+        });
+      }
       return res.status(400).json({ message: 'Election is not open for voting' });
     }
 
