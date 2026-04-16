@@ -5,6 +5,7 @@ import Register from '../pages/auth/Register';
 import StudentDashboard from '../pages/student/Dashboard';
 import Vote from '../pages/student/Vote';
 import Results from '../pages/student/Results';
+import StudentReports from '../pages/student/Reports';
 import AdminDashboard from '../pages/admin/Dashboard';
 import Elections from '../pages/admin/Elections';
 import Candidates from '../pages/admin/Candidates';
@@ -49,6 +50,11 @@ export default function AppRoutes() {
         <Route path="/student/results/:electionId" element={
           <ProtectedRoute allowedRole="student">
             <Results />
+          </ProtectedRoute>
+        } />
+        <Route path="/student/reports" element={
+          <ProtectedRoute allowedRole="student">
+            <StudentReports />
           </ProtectedRoute>
         } />
         

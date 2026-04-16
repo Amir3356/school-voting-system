@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Vote, Clock, CheckCircle, Calendar, Timer } from 'lucide-react';
+import { Vote, Clock, CheckCircle, Calendar, Timer, FileText } from 'lucide-react';
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -81,6 +81,12 @@ export default function StudentDashboard() {
             Welcome back, {user?.username}! 👋
           </h1>
           <p className="text-lg font-semibold text-muted-foreground">View and participate in school elections</p>
+          <div className="mt-4">
+            <Button variant="outline" onClick={() => navigate('/student/reports')}>
+              <FileText className="w-4 h-4 mr-2" />
+              Reports
+            </Button>
+          </div>
         </div>
 
         {loading ? (

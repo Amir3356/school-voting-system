@@ -4,10 +4,12 @@ import { getElections, getUsers } from '../../services/api';
 import Navbar from '../../components/layout/Navbar';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Users, Vote, BarChart3, Settings } from 'lucide-react';
+import { Users, Vote, BarChart3, Settings, FileDown } from 'lucide-react';
+import { downloadDashboardReport, formatDate } from '../../lib/report';
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ elections: 0, users: 0 });
+  const [stats, setStats] = useState({ elections: 0, users: 0, openElections: 0, closedElections: 0, upcomingElections: 0 });
+  const [elections, setElections] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,13 +23,60 @@ export default function AdminDashboard() {
         getUsers()
       ]);
 
+      const electionList = electionsRes.data || [];
+      const now = new Date();
+
+      const openElections = electionList.filter((election) => {
+        const startsLater = election.start_time && new Date(election.start_time) > now;
+        const alreadyEnded = election.end_time && new Date(election.end_time) <= now;
+        return election.status === 'open' && !startsLater && !alreadyEnded;
+      }).length;
+
+      const upcomingElections = electionList.filter((election) => election.start_time && new Date(election.start_time) > now).length;
+      const closedElections = electionList.length - openElections - upcomingElections;
+
+      setElections(electionList);
+
       setStats({
-        elections: electionsRes.data.length,
-        users: usersRes.data.length
+        elections: electionList.length,
+        users: usersRes.data.length,
+        openElections,
+        closedElections,
+        upcomingElections
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
+  };
+
+  const getElectionState = (election) => {
+    const now = new Date();
+    if (election.start_time && new Date(election.start_time) > now) return 'Upcoming';
+    if (election.end_time && new Date(election.end_time) <= now) return 'Closed';
+    if (election.status === 'open') return 'Open';
+    return 'Closed';
+  };
+
+  const handleGenerateReport = () => {
+    downloadDashboardReport({
+      fileName: 'admin-dashboard-report.pdf',
+      title: 'Admin Dashboard Report',
+      generatedBy: 'Admin',
+      summaryRows: [
+        ['Total Elections', stats.elections],
+        ['Total Users', stats.users],
+        ['Open Elections', stats.openElections],
+        ['Upcoming Elections', stats.upcomingElections],
+        ['Closed Elections', stats.closedElections]
+      ],
+      tableHeaders: ['Title', 'Status', 'Start', 'End'],
+      tableRows: elections.map((election) => [
+        election.title,
+        getElectionState(election),
+        formatDate(election.start_time),
+        formatDate(election.end_time)
+      ])
+    });
   };
 
   const menuItems = [
@@ -66,9 +115,17 @@ export default function AdminDashboard() {
       <Navbar />
       
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage school elections and users</p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+            <p className="text-muted-foreground">Manage school elections and users</p>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <Button onClick={handleGenerateReport} className="font-semibold">
+              <FileDown className="w-4 h-4 mr-2" />
+              Generate Report (PDF)
+            </Button>
+          </div>
         </div>
 
         <div className="flex justify-center items-center mb-8">
