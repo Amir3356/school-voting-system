@@ -94,7 +94,6 @@ export default function Register() {
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
             >
               <option value="student">Student</option>
-              <option value="admin">Admin</option>
             </select>
           </div>
           
