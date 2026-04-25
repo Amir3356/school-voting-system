@@ -8,6 +8,7 @@ import { candidateService } from '../../services/candidateService';
 export default function Candidates() {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     loadCandidates();
@@ -21,6 +22,19 @@ export default function Candidates() {
       console.error('Failed to load candidates', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this candidate?')) return;
+    setDeletingId(id);
+    try {
+      await candidateService.delete(id);
+      setCandidates(prev => prev.filter(c => c.id !== id));
+    } catch (error) {
+      alert('Failed to delete candidate.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -49,35 +63,57 @@ export default function Candidates() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {candidates.map((candidate) => (
-              <div key={candidate.id} className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                    {candidate.name.charAt(0)}
+          {candidates.length === 0 ? (
+            <div className="bg-white rounded-lg shadow-md p-12 text-center text-gray-500">
+              No candidates found. Add one to get started.
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {candidates.map((candidate) => (
+                <div key={candidate.id} className="bg-white rounded-lg shadow-md p-6">
+                  <div className="flex items-center mb-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+                      {candidate.photo_url ? (
+                        <img
+                          src={candidate.photo_url}
+                          alt={candidate.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        candidate.name.charAt(0)
+                      )}
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-xl font-bold">{candidate.name}</h3>
+                      <p className="text-gray-600">{candidate.position}</p>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <h3 className="text-xl font-bold">{candidate.name}</h3>
-                    <p className="text-gray-600">{candidate.position}</p>
-                  </div>
-                </div>
-                
-                <p className="text-gray-700 mb-4">{candidate.description}</p>
-                
-                <div className="text-sm text-gray-600 mb-4">
-                  <p><strong>Grade:</strong> {candidate.grade}</p>
-                  <p><strong>Section:</strong> {candidate.section}</p>
-                </div>
 
-                <div className="flex space-x-2">
-                  <Link to={`/admin/candidates/${candidate.id}/edit`} className="flex-1">
-                    <Button size="sm" variant="outline" className="w-full">Edit</Button>
-                  </Link>
-                  <Button size="sm" variant="outline" className="flex-1">Delete</Button>
+                  <p className="text-gray-700 mb-4 text-sm line-clamp-2">{candidate.bio || candidate.description}</p>
+
+                  <div className="text-sm text-gray-600 mb-4">
+                    <p><strong>Election:</strong> {candidate.election?.title || '—'}</p>
+                    <p><strong>Grade:</strong> {candidate.grade} &nbsp; <strong>Section:</strong> {candidate.section}</p>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Link to={`/admin/candidates/${candidate.id}/edit`} className="flex-1">
+                      <Button size="sm" variant="outline" className="w-full">Edit</Button>
+                    </Link>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="flex-1 text-red-600 border-red-300 hover:bg-red-50"
+                      onClick={() => handleDelete(candidate.id)}
+                      disabled={deletingId === candidate.id}
+                    >
+                      {deletingId === candidate.id ? 'Deleting...' : 'Delete'}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
