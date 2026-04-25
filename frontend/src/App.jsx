@@ -16,6 +16,7 @@ import CreateElection from './pages/admin/CreateElection';
 import CreateCandidate from './pages/admin/CreateCandidate';
 import EditElection from './pages/admin/EditElection';
 import EditCandidate from './pages/admin/EditCandidate';
+import ManageUsers from './pages/admin/ManageUsers';
 
 function App() {
   return (
@@ -106,6 +107,14 @@ function App() {
             element={
               <ProtectedRoute requiredRole="admin">
                 <Results />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <ManageUsers />
               </ProtectedRoute>
             }
           />
