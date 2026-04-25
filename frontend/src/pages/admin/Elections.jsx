@@ -8,6 +8,7 @@ import { electionService } from '../../services/electionService';
 export default function Elections() {
   const [elections, setElections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     loadElections();
@@ -21,6 +22,19 @@ export default function Elections() {
       console.error('Failed to load elections', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this election?')) return;
+    setDeletingId(id);
+    try {
+      await electionService.delete(id);
+      setElections(prev => prev.filter(e => e.id !== id));
+    } catch (error) {
+      alert('Failed to delete election.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -62,33 +76,43 @@ export default function Elections() {
                 </tr>
               </thead>
               <tbody>
-                {elections.map((election) => (
-                  <tr key={election.id} className="border-t">
-                    <td className="px-6 py-4 font-medium">{election.title}</td>
-                    <td className="px-6 py-4 text-gray-600">{election.description}</td>
-                    <td className="px-6 py-4">
-                      {new Date(election.start_date).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      {new Date(election.end_date).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded text-sm ${
-                        election.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {election.is_active ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 space-x-2">
-                      <Link to={`/admin/elections/${election.id}/edit`}>
-                        <Button size="sm" variant="outline">Edit</Button>
-                      </Link>
-                      <Link to={`/admin/elections/${election.id}/results`}>
-                        <Button size="sm">Results</Button>
-                      </Link>
+                {elections.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                      No elections found. Create one to get started.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  elections.map((election) => (
+                    <tr key={election.id} className="border-t hover:bg-gray-50">
+                      <td className="px-6 py-4 font-medium">{election.title}</td>
+                      <td className="px-6 py-4 text-gray-600 max-w-xs truncate">{election.description}</td>
+                      <td className="px-6 py-4">{new Date(election.start_date).toLocaleDateString()}</td>
+                      <td className="px-6 py-4">{new Date(election.end_date).toLocaleDateString()}</td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2 py-1 rounded text-sm ${
+                          election.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {election.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 space-x-2">
+                        <Link to={`/admin/elections/${election.id}/edit`}>
+                          <Button size="sm" variant="outline">Edit</Button>
+                        </Link>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(election.id)}
+                          disabled={deletingId === election.id}
+                          className="text-red-600 border-red-300 hover:bg-red-50"
+                        >
+                          {deletingId === election.id ? 'Deleting...' : 'Delete'}
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
