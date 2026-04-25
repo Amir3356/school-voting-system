@@ -24,7 +24,17 @@ export default function Elections() {
     }
   };
 
-  if (loading) return <Loader size="lg" />;
+  if (loading) return (
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 ml-64 transition-all duration-300">
+        <div className="container mx-auto px-4 py-8">
+          <div className="h-10 bg-gray-200 rounded w-64 mb-6 animate-pulse"></div>
+          <Shimmer type="table" count={6} />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex min-h-screen bg-gray-50">

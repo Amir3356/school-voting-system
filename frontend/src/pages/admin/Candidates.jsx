@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/layout/Sidebar';
 import Button from '../../components/common/Button';
-import Loader from '../../components/common/Loader';
+import Shimmer from '../../components/common/Shimmer';
 import { candidateService } from '../../services/candidateService';
 
 export default function Candidates() {
