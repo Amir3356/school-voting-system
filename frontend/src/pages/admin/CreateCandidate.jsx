@@ -12,10 +12,12 @@ export default function CreateCandidate() {
   const { showSuccess, showError } = useNotification();
   const [loading, setLoading] = useState(false);
   const [elections, setElections] = useState([]);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [formData, setFormData] = useState({
     election_id: '',
     name: '',
     position: '',
+    photo: null,
     description: '',
     grade: '',
     section: ''
@@ -42,12 +44,24 @@ export default function CreateCandidate() {
     }));
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData(prev => ({ ...prev, photo: file }));
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await candidateService.create(formData);
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null && value !== '') data.append(key, value);
+      });
+      await candidateService.create(data);
       showSuccess('Candidate added successfully!');
       navigate('/admin/candidates');
     } catch (error) {
