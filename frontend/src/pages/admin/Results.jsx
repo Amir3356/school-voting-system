@@ -17,10 +17,11 @@ export default function Results() {
   const loadElections = async () => {
     try {
       const response = await electionService.getAll();
-      setElections(response.data);
-      if (response.data.length > 0) {
-        loadResults(response.data[0].id);
-        setSelectedElection(response.data[0].id);
+      const list = Array.isArray(response.data) ? response.data : [];
+      setElections(list);
+      if (list.length > 0) {
+        setSelectedElection(list[0].id);
+        loadResults(list[0].id);
       }
     } catch (error) {
       console.error('Failed to load elections', error);
@@ -33,9 +34,13 @@ export default function Results() {
     try {
       setLoading(true);
       const response = await voteService.getResults(electionId);
-      setResults(response.data);
+      // response is the full JSON body: { success, message, data }
+      // data could be an array or an object with candidates array
+      const raw = response.data ?? response;
+      setResults(Array.isArray(raw) ? raw : []);
     } catch (error) {
       console.error('Failed to load results', error);
+      setResults([]);
     } finally {
       setLoading(false);
     }
