@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\VoteController;
+use App\Http\Controllers\UserController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
