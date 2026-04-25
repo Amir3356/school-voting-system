@@ -60,10 +60,26 @@ function App() {
             }
           />
           <Route
+            path="/admin/elections/create"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <CreateElection />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/candidates"
             element={
               <ProtectedRoute requiredRole="admin">
                 <Candidates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/candidates/create"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <CreateCandidate />
               </ProtectedRoute>
             }
           />
