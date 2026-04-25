@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('election_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('student_id');
+            $table->string('student_id')->nullable();
             $table->string('grade');
             $table->string('section');
             $table->string('position');
