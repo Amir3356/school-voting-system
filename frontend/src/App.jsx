@@ -12,6 +12,8 @@ import AdminDashboard from './pages/admin/Dashboard';
 import Elections from './pages/admin/Elections';
 import Candidates from './pages/admin/Candidates';
 import Results from './pages/admin/Results';
+import CreateElection from './pages/admin/CreateElection';
+import CreateCandidate from './pages/admin/CreateCandidate';
 
 function App() {
   return (
