@@ -9,6 +9,7 @@ export default function Elections() {
   const [elections, setElections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
+  const [togglingId, setTogglingId] = useState(null);
 
   useEffect(() => {
     loadElections();
@@ -22,6 +23,20 @@ export default function Elections() {
       console.error('Failed to load elections', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleStatus = async (election) => {
+    setTogglingId(election.id);
+    try {
+      await electionService.update(election.id, { ...election, is_active: !election.is_active });
+      setElections(prev =>
+        prev.map(e => e.id === election.id ? { ...e, is_active: !e.is_active } : e)
+      );
+    } catch (error) {
+      alert('Failed to update status.');
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -90,9 +105,20 @@ export default function Elections() {
                       <td className="px-6 py-4">{new Date(election.start_date).toLocaleDateString()}</td>
                       <td className="px-6 py-4">{new Date(election.end_date).toLocaleDateString()}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded text-sm ${
-                          election.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
+                        <button
+                          onClick={() => handleToggleStatus(election)}
+                          disabled={togglingId === election.id}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                            election.is_active ? 'bg-green-500' : 'bg-gray-300'
+                          } ${togglingId === election.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                              election.is_active ? 'translate-x-6' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                        <span className={`ml-2 text-sm font-medium ${election.is_active ? 'text-green-600' : 'text-gray-500'}`}>
                           {election.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
