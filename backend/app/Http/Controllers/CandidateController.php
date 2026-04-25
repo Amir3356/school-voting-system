@@ -27,7 +27,7 @@ class CandidateController extends Controller
         $validated = $request->validate([
             'election_id' => 'required|exists:elections,id',
             'name' => 'required|string|max:255',
-            'student_id' => 'required|string',
+            'student_id' => 'nullable|string',
             'grade' => 'required|string',
             'section' => 'required|string',
             'position' => 'required|string',

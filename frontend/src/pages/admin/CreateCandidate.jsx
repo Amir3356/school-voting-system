@@ -13,6 +13,7 @@ export default function CreateCandidate() {
   const [loading, setLoading] = useState(false);
   const [elections, setElections] = useState([]);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     election_id: '',
     name: '',
@@ -55,6 +56,7 @@ export default function CreateCandidate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
     try {
       const data = new FormData();
@@ -62,10 +64,9 @@ export default function CreateCandidate() {
         if (value !== null && value !== '') data.append(key, value);
       });
       await candidateService.create(data);
-      showSuccess('Candidate added successfully!');
       navigate('/admin/candidates');
-    } catch (error) {
-      showError(error.response?.data?.message || 'Failed to add candidate');
+    } catch (err) {
+      setError(err?.message || err?.error || 'Failed to add candidate. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -218,6 +219,13 @@ export default function CreateCandidate() {
               </div>
 
               <div className="flex space-x-4 pt-4">
+                {error && (
+                  <p className="w-full text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2 mb-2">
+                    {error}
+                  </p>
+                )}
+              </div>
+              <div className="flex space-x-4">
                 <Button type="submit" disabled={loading}>
                   {loading ? 'Adding...' : 'Add Candidate'}
                 </Button>
