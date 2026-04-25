@@ -22,7 +22,7 @@ export default function Login() {
       navigate(user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard');
     } catch (err) {
       setError(err?.message || 'Invalid email or password.');
-      setTimeout(() => setError(''), 4000);
+      setTimeout(() => setError(''), 5000);
     } finally {
       setLoading(false);
     }
