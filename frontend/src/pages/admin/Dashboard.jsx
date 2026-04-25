@@ -91,7 +91,7 @@ export default function AdminDashboard() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <Link to={`/admin/elections/${election.id}/results`}>
+                    <Link to={`/admin/results?election=${election.id}`}>
                       <Button size="sm" variant="outline">View Results</Button>
                     </Link>
                   </td>

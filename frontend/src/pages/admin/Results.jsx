@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Sidebar from '../../components/layout/Sidebar';
 import Shimmer from '../../components/common/Shimmer';
 import { electionService } from '../../services/electionService';
 import { voteService } from '../../services/voteService';
 
 export default function Results() {
+  const [searchParams] = useSearchParams();
   const [elections, setElections] = useState([]);
   const [selectedElection, setSelectedElection] = useState(null);
   const [results, setResults] = useState([]);
@@ -20,8 +22,11 @@ export default function Results() {
       const list = Array.isArray(response.data) ? response.data : [];
       setElections(list);
       if (list.length > 0) {
-        setSelectedElection(list[0].id);
-        loadResults(list[0].id);
+        // pre-select from query param or default to first
+        const paramId = searchParams.get('election');
+        const defaultId = paramId ? Number(paramId) : list[0].id;
+        setSelectedElection(defaultId);
+        loadResults(defaultId);
       }
     } catch (error) {
       console.error('Failed to load elections', error);
