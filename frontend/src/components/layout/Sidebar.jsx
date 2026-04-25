@@ -9,6 +9,7 @@ import {
   ChevronRightIcon,
   ArrowRightOnRectangleIcon,
   UserCircleIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../../context/AuthContext';
 
@@ -23,6 +24,7 @@ export default function Sidebar() {
     { name: 'Elections', icon: ClipboardDocumentListIcon, path: '/admin/elections' },
     { name: 'Candidates', icon: UserGroupIcon, path: '/admin/candidates' },
     { name: 'Results', icon: ChartBarIcon, path: '/admin/results' },
+    { name: 'Manage Users', icon: UsersIcon, path: '/admin/users' },
   ];
 
   const isActive = (path) => location.pathname === path;
