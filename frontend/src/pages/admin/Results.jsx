@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/layout/Sidebar';
-import Loader from '../../components/common/Loader';
+import Shimmer from '../../components/common/Shimmer';
 import { electionService } from '../../services/electionService';
 import { voteService } from '../../services/voteService';
 
