@@ -74,7 +74,7 @@ export default function ManageUsers() {
         <div className="container mx-auto px-4 py-8">
 
           {/* Header */}
-          <div className="mb-6">
+          <div className="mb-6 text-center">
             <h1 className="text-3xl font-bold text-gray-800">Manage Users</h1>
             <p className="text-gray-500 mt-1">View and manage all registered users</p>
           </div>
