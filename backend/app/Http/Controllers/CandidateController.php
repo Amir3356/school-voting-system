@@ -32,10 +32,16 @@ class CandidateController extends Controller
             'section' => 'required|string',
             'position' => 'required|string',
             'bio' => 'nullable|string',
-            'photo_url' => 'nullable|url',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'manifesto' => 'nullable|string'
         ]);
 
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('candidates', 'public');
+            $validated['photo_url'] = asset('storage/' . $path);
+        }
+
+        unset($validated['photo']);
         $candidate = Candidate::create($validated);
         return $this->successResponse($candidate, 'Candidate added successfully', 201);
     }
@@ -57,10 +63,16 @@ class CandidateController extends Controller
             'section' => 'string',
             'position' => 'string',
             'bio' => 'nullable|string',
-            'photo_url' => 'nullable|url',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'manifesto' => 'nullable|string'
         ]);
 
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('candidates', 'public');
+            $validated['photo_url'] = asset('storage/' . $path);
+        }
+
+        unset($validated['photo']);
         $candidate->update($validated);
         return $this->successResponse($candidate, 'Candidate updated successfully');
     }
