@@ -15,6 +15,7 @@ import Results from './pages/admin/Results';
 import CreateElection from './pages/admin/CreateElection';
 import CreateCandidate from './pages/admin/CreateCandidate';
 import EditElection from './pages/admin/EditElection';
+import EditCandidate from './pages/admin/EditCandidate';
 
 function App() {
   return (
