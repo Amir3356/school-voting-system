@@ -5,8 +5,8 @@ import {
   ChartBarIcon, 
   UserGroupIcon, 
   ClipboardDocumentListIcon,
-  Bars3Icon,
-  XMarkIcon
+  ChevronLeftIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 
 export default function Sidebar() {
@@ -33,12 +33,12 @@ export default function Sidebar() {
         {!isCollapsed && <h2 className="text-xl font-bold">Admin Panel</h2>}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
+          className="p-2 rounded-lg hover:bg-gray-800 transition-colors ml-auto"
         >
           {isCollapsed ? (
-            <Bars3Icon className="w-6 h-6" />
+            <ChevronRightIcon className="w-6 h-6" />
           ) : (
-            <XMarkIcon className="w-6 h-6" />
+            <ChevronLeftIcon className="w-6 h-6" />
           )}
         </button>
       </div>
