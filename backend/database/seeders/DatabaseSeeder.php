@@ -21,31 +21,5 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Create sample students
-        User::firstOrCreate(
-            ['email' => 'john@school.com'],
-            [
-                'name' => 'John Doe',
-                'password' => Hash::make('password'),
-                'role' => 'student',
-                'student_id' => 'STU001',
-                'grade' => '10',
-                'section' => 'A',
-                'is_active' => true
-            ]
-        );
-
-        User::firstOrCreate(
-            ['email' => 'jane@school.com'],
-            [
-                'name' => 'Jane Smith',
-                'password' => Hash::make('password'),
-                'role' => 'student',
-                'student_id' => 'STU002',
-                'grade' => '10',
-                'section' => 'B',
-                'is_active' => true
-            ]
-        );
     }
 }
