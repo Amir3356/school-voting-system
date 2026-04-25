@@ -9,6 +9,9 @@ import Register from './pages/auth/Register';
 import StudentDashboard from './pages/student/Dashboard';
 import Vote from './pages/student/Vote';
 import AdminDashboard from './pages/admin/Dashboard';
+import Elections from './pages/admin/Elections';
+import Candidates from './pages/admin/Candidates';
+import Results from './pages/admin/Results';
 
 function App() {
   return (
@@ -43,6 +46,30 @@ function App() {
             element={
               <ProtectedRoute requiredRole="admin">
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/elections"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <Elections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/candidates"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <Candidates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/results"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <Results />
               </ProtectedRoute>
             }
           />
