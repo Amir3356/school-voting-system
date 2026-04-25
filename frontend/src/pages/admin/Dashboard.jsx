@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { electionService } from '../../services/electionService';
-import Navbar from '../../components/layout/Navbar';
+import Sidebar from '../../components/layout/Sidebar';
 import Button from '../../components/common/Button';
 import Loader from '../../components/common/Loader';
 
@@ -27,10 +27,11 @@ export default function AdminDashboard() {
   if (loading) return <Loader size="lg" />;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="flex-1 ml-64 transition-all duration-300">
+        <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <Link to="/admin/elections/create">
