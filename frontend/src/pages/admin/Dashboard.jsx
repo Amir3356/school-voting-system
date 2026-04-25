@@ -46,12 +46,9 @@ export default function AdminDashboard() {
         <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <Link to="/admin/elections/create">
-            <Button>Create Election</Button>
-          </Link>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-600">Total Elections</h3>
             <p className="text-3xl font-bold text-blue-600">{elections.length}</p>
@@ -61,14 +58,6 @@ export default function AdminDashboard() {
             <p className="text-3xl font-bold text-green-600">
               {elections.filter(e => e.is_active).length}
             </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-gray-600">Quick Actions</h3>
-            <div className="mt-2 space-y-2">
-              <Link to="/admin/candidates/create">
-                <Button size="sm" className="w-full">Add Candidate</Button>
-              </Link>
-            </div>
           </div>
         </div>
 
