@@ -94,6 +94,14 @@ function App() {
             }
           />
           <Route
+            path="/admin/candidates/:id/edit"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <EditCandidate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/results"
             element={
               <ProtectedRoute requiredRole="admin">
