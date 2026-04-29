@@ -17,7 +17,8 @@ export default function EditElection() {
     description: '',
     start_date: '',
     end_date: '',
-    is_active: true
+    is_active: true,
+    max_votes_per_user: 1
   });
 
   useEffect(() => {
@@ -33,7 +34,8 @@ export default function EditElection() {
         description: e.description,
         start_date: e.start_date?.slice(0, 16),
         end_date: e.end_date?.slice(0, 16),
-        is_active: e.is_active
+        is_active: e.is_active,
+        max_votes_per_user: e.max_votes_per_user ?? 1
       });
     } catch (error) {
       setError('Failed to load election.');
@@ -145,6 +147,21 @@ export default function EditElection() {
                     required
                   />
                 </div>
+              </div>
+
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Max Votes Per User *
+                </label>
+                <Input
+                  type="number"
+                  name="max_votes_per_user"
+                  value={formData.max_votes_per_user}
+                  min={1}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               {error && (
