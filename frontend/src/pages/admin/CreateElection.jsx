@@ -15,7 +15,8 @@ export default function CreateElection() {
     description: '',
     start_date: '',
     end_date: '',
-    is_active: true
+    is_active: true,
+    max_votes_per_user: 1
   });
 
   const handleChange = (e) => {
@@ -109,6 +110,21 @@ export default function CreateElection() {
                     required
                   />
                 </div>
+              </div>
+
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Max Votes Per User *
+                </label>
+                <Input
+                  type="number"
+                  name="max_votes_per_user"
+                  value={formData.max_votes_per_user}
+                  min={1}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="flex items-center">
