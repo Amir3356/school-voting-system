@@ -108,14 +108,12 @@ export default function ManageUsers() {
               <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
                 Search
               </button>
-              <button type="button" onClick={() => { setSearch(''); setRoleFilter(''); loadUsers(); }} className="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                Reset
-              </button>
+              {/* Reset button removed as requested */}
             </form>
 
             {/* Role Filter Tabs */}
             <div className="flex gap-2 mt-3">
-              {['', 'student'].map(role => (
+              {['student'].map(role => (
                 <button
                   key={role}
                   onClick={() => handleRoleFilter(role)}
@@ -123,7 +121,7 @@ export default function ManageUsers() {
                     roleFilter === role ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
-                  {role === '' ? 'All' : role.charAt(0).toUpperCase() + role.slice(1) + 's'}
+                  {role.charAt(0).toUpperCase() + role.slice(1) + 's'}
                 </button>
               ))}
             </div>
