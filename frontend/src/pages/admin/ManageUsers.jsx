@@ -90,7 +90,7 @@ export default function ManageUsers() {
               <p className="text-xs text-gray-500 mt-1">Students</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-2xl font-bold text-purple-600">{nonAdminUsers.filter(u => u.role === 'student').length === nonAdminUsers.length ? '—' : nonAdminUsers.length}</p>
+              <p className="text-2xl font-bold text-purple-600">{nonAdminUsers.length}</p>
               <p className="text-xs text-gray-500 mt-1">Visible Users</p>
             </div>
           </div>
