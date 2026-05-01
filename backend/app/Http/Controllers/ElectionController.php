@@ -22,7 +22,7 @@ class ElectionController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'end_date' => 'required|date',
             'max_votes_per_user' => 'integer|min:1'
         ]);
 
@@ -44,7 +44,7 @@ class ElectionController extends Controller
             'title' => 'string|max:255',
             'description' => 'nullable|string',
             'start_date' => 'date',
-            'end_date' => 'date|after:start_date',
+            'end_date' => 'date',
             'is_active' => 'boolean',
             'max_votes_per_user' => 'integer|min:1'
         ]);
