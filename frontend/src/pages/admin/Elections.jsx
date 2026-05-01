@@ -84,8 +84,6 @@ export default function Elections() {
                 <tr>
                   <th className="px-6 py-3 text-left">Title</th>
                   <th className="px-6 py-3 text-left">Description</th>
-                  <th className="px-6 py-3 text-left">Start Date</th>
-                  <th className="px-6 py-3 text-left">End Date</th>
                   <th className="px-6 py-3 text-left">Status</th>
                   <th className="px-6 py-3 text-left">Actions</th>
                 </tr>
@@ -102,8 +100,6 @@ export default function Elections() {
                     <tr key={election.id} className="border-t hover:bg-gray-50">
                       <td className="px-6 py-4 font-medium">{election.title}</td>
                       <td className="px-6 py-4 text-gray-600 max-w-xs truncate">{election.description}</td>
-                      <td className="px-6 py-4">{new Date(election.start_date).toLocaleDateString()}</td>
-                      <td className="px-6 py-4">{new Date(election.end_date).toLocaleDateString()}</td>
                       <td className="px-6 py-4">
                         <button
                           onClick={() => handleToggleStatus(election)}

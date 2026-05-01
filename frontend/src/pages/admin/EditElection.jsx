@@ -15,8 +15,6 @@ export default function EditElection() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    start_date: '',
-    end_date: '',
     is_active: true,
     max_votes_per_user: 1
   });
@@ -32,8 +30,6 @@ export default function EditElection() {
       setFormData({
         title: e.title,
         description: e.description,
-        start_date: e.start_date?.slice(0, 16),
-        end_date: e.end_date?.slice(0, 16),
         is_active: e.is_active,
         max_votes_per_user: e.max_votes_per_user ?? 1
       });
@@ -122,32 +118,7 @@ export default function EditElection() {
                 />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Start Date *
-                  </label>
-                  <Input
-                    type="datetime-local"
-                    name="start_date"
-                    value={formData.start_date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    End Date *
-                  </label>
-                  <Input
-                    type="datetime-local"
-                    name="end_date"
-                    value={formData.end_date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
+              {/* Start/End dates removed — activation handled by 'is_active' */}
 
 
               <div>

@@ -119,7 +119,7 @@ export default function Vote() {
           <h1 className="text-3xl font-bold text-gray-800">{election?.title}</h1>
           <p className="text-gray-500 mt-1">{election?.description}</p>
           <p className="text-sm text-gray-400 mt-1">
-            📅 Ends: {new Date(election?.end_date).toLocaleDateString()}
+            {/* End date removed — election activation controlled by admin */}
           </p>
         </div>
 

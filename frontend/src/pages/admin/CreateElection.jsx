@@ -13,8 +13,6 @@ export default function CreateElection() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    start_date: '',
-    end_date: '',
     is_active: true,
     max_votes_per_user: 1
   });
@@ -84,33 +82,7 @@ export default function CreateElection() {
                 />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Start Date *
-                  </label>
-                  <Input
-                    type="datetime-local"
-                    name="start_date"
-                    value={formData.start_date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    End Date *
-                  </label>
-                  <Input
-                    type="datetime-local"
-                    name="end_date"
-                    value={formData.end_date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
+              {/* Start/End dates removed — election activation is controlled by 'is_active' */}
 
 
               <div>

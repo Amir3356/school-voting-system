@@ -67,8 +67,6 @@ export default function AdminDashboard() {
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-6 py-3 text-left">Title</th>
-                <th className="px-6 py-3 text-left">Start Date</th>
-                <th className="px-6 py-3 text-left">End Date</th>
                 <th className="px-6 py-3 text-left">Status</th>
                 <th className="px-6 py-3 text-left">Actions</th>
               </tr>
@@ -77,12 +75,6 @@ export default function AdminDashboard() {
               {elections.map((election) => (
                 <tr key={election.id} className="border-t">
                   <td className="px-6 py-4">{election.title}</td>
-                  <td className="px-6 py-4">
-                    {new Date(election.start_date).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    {new Date(election.end_date).toLocaleDateString()}
-                  </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded text-sm ${
                       election.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'

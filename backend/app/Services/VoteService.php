@@ -20,7 +20,7 @@ class VoteService
         $candidate = Candidate::findOrFail($candidateId);
 
         // Validate election is active
-        if (!$election->isActive()) {
+        if (!$election->is_active) {
             throw new \Exception('This election is not currently active');
         }
 
