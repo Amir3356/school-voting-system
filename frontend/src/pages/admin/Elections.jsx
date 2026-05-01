@@ -100,21 +100,24 @@ export default function Elections() {
                     <tr key={election.id} className="border-t hover:bg-gray-50">
                       <td className="px-6 py-4 font-medium">{election.title}</td>
                       <td className="px-6 py-4 text-gray-600 max-w-xs truncate">{election.description}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 flex items-center gap-3">
                         <button
                           onClick={() => handleToggleStatus(election)}
                           disabled={togglingId === election.id}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                            election.is_active ? 'bg-green-500' : 'bg-gray-300'
-                          } ${togglingId === election.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                          title={election.is_active ? 'Click to end voting' : 'Click to start voting'}
+                          className={`inline-flex items-center justify-center h-8 w-8 rounded-full transition-colors focus:outline-none ${togglingId === election.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${election.is_active ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}
                         >
-                          <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                              election.is_active ? 'translate-x-6' : 'translate-x-1'
-                            }`}
-                          />
+                          {election.is_active ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                              <rect x="5" y="5" width="14" height="14" rx="2" />
+                            </svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M4 2v20l18-10L4 2z" />
+                            </svg>
+                          )}
                         </button>
-                        <span className={`ml-2 text-sm font-medium ${election.is_active ? 'text-green-600' : 'text-gray-500'}`}>
+                        <span className={`ml-1 text-sm font-medium ${election.is_active ? 'text-red-600' : 'text-green-600'}`}>
                           {election.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
