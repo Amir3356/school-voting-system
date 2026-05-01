@@ -115,26 +115,32 @@ export default function StudentDashboard() {
 
         {/* ── Active Elections ── */}
         {activeTab === 'Active Elections' && (
-          loading ? shimmer : activeElections.length === 0 ? (
+          loading ? shimmer : allElections.length === 0 ? (
             <Empty icon="🗳️" title="No active elections" sub="Check back later for upcoming elections." />
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activeElections.map(election => {
+              {allElections.map(election => {
                 const voted = votedElectionIds.includes(election.id);
+                const status = getElectionStatus(election);
                 return (
                   <div key={election.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
                     <div className="bg-blue-50 px-6 py-4 border-b border-blue-100 flex items-center justify-between">
                       <h3 className="text-lg font-bold text-gray-800 truncate">{election.title}</h3>
-                      <span className="text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-2 flex-shrink-0">🟢 Active</span>
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ml-2 flex-shrink-0 ${status.badge}`}>
+                        {status.icon} {status.label}
+                      </span>
                     </div>
                     <div className="px-6 py-4">
                       <p className="text-gray-600 text-sm line-clamp-2 mb-3">{election.description || 'No description.'}</p>
                       <div className="flex justify-between text-xs text-gray-500 mb-3">
+                        <span>📅 Starts: {new Date(election.start_date).toLocaleDateString()}</span>
                         <span>📅 Ends: {new Date(election.end_date).toLocaleDateString()}</span>
-                        <span className="text-orange-500 font-medium">{getDaysLeft(election.end_date)}</span>
                       </div>
-                      <p className="text-xs text-gray-400 mb-4">👥 {election.candidates?.length ?? 0} candidates</p>
-                      {voted ? (
+                      <div className="flex justify-between text-xs text-gray-500 mb-3">
+                        <span className="text-orange-500 font-medium">{getDaysLeft(election.end_date)}</span>
+                        <span>👥 {election.candidates?.length ?? 0} candidates</span>
+                      </div>
+                      {status.canVote ? voted ? (
                         <div className="w-full text-center py-2 bg-green-50 text-green-700 text-sm font-medium rounded-lg border border-green-200">
                           ✅ You already voted
                         </div>
@@ -142,6 +148,10 @@ export default function StudentDashboard() {
                         <Link to={`/student/vote/${election.id}`}>
                           <Button className="w-full">Vote Now</Button>
                         </Link>
+                      ) : (
+                        <div className={`w-full text-center py-2 text-sm font-medium rounded-lg border ${status.actionClass}`}>
+                          {status.action}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -247,6 +257,54 @@ function Empty({ icon, title, sub }) {
       <p className="text-gray-400 text-sm mt-1">{sub}</p>
     </div>
   );
+}
+
+function getElectionStatus(election) {
+  const now = new Date();
+  const startDate = new Date(election.start_date);
+  const endDate = new Date(election.end_date);
+
+  if (!election.is_active) {
+    return {
+      label: 'Inactive',
+      icon: '⚪',
+      badge: 'bg-gray-100 text-gray-700',
+      action: 'Inactive',
+      actionClass: 'bg-gray-50 text-gray-500 border-gray-200',
+      canVote: false,
+    };
+  }
+
+  if (startDate > now) {
+    return {
+      label: 'Upcoming',
+      icon: '🔜',
+      badge: 'bg-orange-100 text-orange-700',
+      action: 'Voting starts soon',
+      actionClass: 'bg-orange-50 text-orange-700 border-orange-200',
+      canVote: false,
+    };
+  }
+
+  if (endDate < now) {
+    return {
+      label: 'Ended',
+      icon: '⏹️',
+      badge: 'bg-red-100 text-red-700',
+      action: 'Election ended',
+      actionClass: 'bg-red-50 text-red-700 border-red-200',
+      canVote: false,
+    };
+  }
+
+  return {
+    label: 'Active',
+    icon: '🟢',
+    badge: 'bg-green-100 text-green-700',
+    action: 'Vote Now',
+    actionClass: 'bg-green-50 text-green-700 border-green-200',
+    canVote: true,
+  };
 }
 
 function ResultsTab({ allElections, loading }) {
