@@ -176,25 +176,25 @@ export default function ManageUsers() {
                         <button
                           onClick={() => handleToggleStatus(user)}
                           disabled={togglingId === user.id}
-                          className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none border-2 ${
-                            user.is_active ? 'bg-green-500 border-green-600' : 'bg-gray-300 border-gray-400'
-                          } ${togglingId === user.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                          title={user.is_active ? 'Click to deactivate user' : 'Click to activate user'}
+                          className={`inline-flex items-center justify-center h-8 w-8 rounded-full transition-colors focus:outline-none ${
+                            togglingId === user.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                          } ${user.is_active ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}
                           aria-label={user.is_active ? 'Set Inactive' : 'Set Active'}
                         >
-                          <span className="absolute left-1 flex items-center h-5">
-                            {user.is_active ? (
-                              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                            ) : (
-                              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                            )}
-                          </span>
-                          <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
-                            user.is_active ? 'translate-x-7' : 'translate-x-0'
-                          }`} />
-                          <span className="absolute right-2 text-xs font-semibold select-none" style={{ color: user.is_active ? '#fff' : '#888' }}>
-                            {user.is_active ? 'Active' : 'Inactive'}
-                          </span>
+                          {user.is_active ? (
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M5 5h5v14H5zM14 5h5v14h-5z" />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          )}
                         </button>
+                        <span className={`ml-2 text-xs font-medium ${user.is_active ? 'text-red-600' : 'text-green-600'}`}>
+                          {user.is_active ? 'Active' : 'Inactive'}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <button
