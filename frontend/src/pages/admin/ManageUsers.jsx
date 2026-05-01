@@ -62,9 +62,9 @@ export default function ManageUsers() {
     }
   };
 
-  const students = users.filter(u => u.role === 'student');
-  const admins = users.filter(u => u.role === 'admin');
-  const filtered = roleFilter === 'student' ? students : roleFilter === 'admin' ? admins : users;
+  const nonAdminUsers = users.filter(u => u.role !== 'admin');
+  const students = nonAdminUsers.filter(u => u.role === 'student');
+  const filtered = roleFilter === 'student' ? students : nonAdminUsers;
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -82,7 +82,7 @@ export default function ManageUsers() {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-2xl font-bold text-blue-600">{users.length}</p>
+              <p className="text-2xl font-bold text-blue-600">{nonAdminUsers.length}</p>
               <p className="text-xs text-gray-500 mt-1">Total Users</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
@@ -90,8 +90,8 @@ export default function ManageUsers() {
               <p className="text-xs text-gray-500 mt-1">Students</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-2xl font-bold text-purple-600">{admins.length}</p>
-              <p className="text-xs text-gray-500 mt-1">Admins</p>
+              <p className="text-2xl font-bold text-purple-600">{nonAdminUsers.filter(u => u.role === 'student').length === nonAdminUsers.length ? '—' : nonAdminUsers.length}</p>
+              <p className="text-xs text-gray-500 mt-1">Visible Users</p>
             </div>
           </div>
 
@@ -115,7 +115,7 @@ export default function ManageUsers() {
 
             {/* Role Filter Tabs */}
             <div className="flex gap-2 mt-3">
-              {['', 'student', 'admin'].map(role => (
+              {['', 'student'].map(role => (
                 <button
                   key={role}
                   onClick={() => handleRoleFilter(role)}
@@ -164,9 +164,7 @@ export default function ManageUsers() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
-                        }`}>
+                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                           {user.role}
                         </span>
                       </td>
@@ -199,15 +197,13 @@ export default function ManageUsers() {
                         </button>
                       </td>
                       <td className="px-6 py-4">
-                        {user.role !== 'admin' && (
-                          <button
-                            onClick={() => handleDelete(user.id)}
-                            disabled={deletingId === user.id}
-                            className="text-xs text-red-600 border border-red-200 px-3 py-1 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
-                          >
-                            {deletingId === user.id ? 'Deleting...' : 'Delete'}
-                          </button>
-                        )}
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          disabled={deletingId === user.id}
+                          className="text-xs text-red-600 border border-red-200 px-3 py-1 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                        >
+                          {deletingId === user.id ? 'Deleting...' : 'Delete'}
+                        </button>
                       </td>
                     </tr>
                   ))}
