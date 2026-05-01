@@ -12,8 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
             $table->boolean('is_active')->default(true);
             $table->integer('max_votes_per_user')->default(1);
             $table->timestamps();
