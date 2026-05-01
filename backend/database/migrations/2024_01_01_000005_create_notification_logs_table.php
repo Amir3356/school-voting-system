@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('recipient');
             $table->string('subject');
-            $table->enum('type', ['email', 'sms'])->default('email');
+            $table->enum('type', ['email'])->default('email');
             $table->enum('status', ['sent', 'failed'])->default('sent');
             $table->text('error_message')->nullable();
             $table->timestamp('sent_at');
