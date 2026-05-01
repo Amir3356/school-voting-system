@@ -39,10 +39,17 @@ export default function Results() {
     try {
       setLoading(true);
       const response = await voteService.getResults(electionId);
-      // response is the full JSON body: { success, message, data }
-      // data could be an array or an object with candidates array
-      const raw = response.data ?? response;
-      setResults(Array.isArray(raw) ? raw : []);
+      // API returns { success, message, data } where data contains:
+      // { election, results: [...], total_votes, turnout_percentage }
+      const body = response.data ?? response;
+      const payload = body.data ?? body;
+      if (Array.isArray(payload)) {
+        setResults(payload);
+      } else if (payload && Array.isArray(payload.results)) {
+        setResults(payload.results);
+      } else {
+        setResults([]);
+      }
     } catch (error) {
       console.error('Failed to load results', error);
       setResults([]);
